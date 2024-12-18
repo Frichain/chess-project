@@ -6,44 +6,7 @@ from core.game import Game
 from math import floor
 import os, re
 
-# class ChessApp:
-#     def __init__(self):
-#         self.root = tk.Tk()
-#         self.root.title("Jeu d'échecs")
-#         self.game = Game()  # Logique du jeu
-#         self._setup_ui()
-
-#     def _setup_ui(self):
-#         # Créez une grille ou autre pour afficher l'échiquier
-#         self.board_frame = tk.Frame(self.root)
-#         self.board_frame.pack()
-#         self._draw_board()
-#         # self._draw_piece(Piece,0,1)
-
-#     def _draw_board(self):
-#         # Exemple basique de dessin d'une grille
-#         for row in range(8):
-#             for col in range(8):
-#                 frame = tk.Frame(
-#                     self.board_frame, 
-#                     width=60, 
-#                     height=60, 
-#                     bg="antique white" if (row + col) % 2 == 0 else "dark slate gray"
-#                 )
-#                 frame.grid(row=row, column=col)
-
-#     def _draw_piece(self, board, piece, row, col):
-#         # Dessine la Pièce piece situé à la case (row,col) sur le Board board 
-#         pass
-
-#     def _erase_piece(self, board, row, col):
-#         # Efface le contenu de la case (row,col)
-
-#     def update_display(self):
-#         pass
-
-#     def run(self):
-#         self.root.mainloop()
+from utils.helpers import *
 
 class ChessApp(tk.Tk):
     def __init__(self):
@@ -80,46 +43,21 @@ class ChessApp(tk.Tk):
         label.place(relx=0.5, rely=0.3, anchor="center")
 
         # Récupération des images de menu dans le dictionnaire img_menu
-        """
-        Faire une fonction load_img(directory_path, img_width, img_height)
-        """
         partial_path = os.path.join(os.getcwd(), "gui/img_menu/")
-        png_files = [f for f in os.listdir(partial_path) if f.endswith('.png')]
-        self.img_menu = {}
-        for i in png_files:
-            try : cle_img = re.search(r"^(.*)(?=\.png)", i)[0]
-            except TypeError : raise ValueError(f"La regex n'a pas trouvé de match pour la string : {i}")
-
-            image_path = os.path.join(partial_path, i)
-            print("=>", image_path)
-            try : 
-                image = Image.open(image_path)
-            except FileNotFoundError: raise FileNotFoundError(f"L'image spécifiée : {image_path}, est introuvable")
-
-            # Redimensionner l'image à stocker dans le dictionnaire
-            img_menu_width = 256
-            img_menu_height = 256
-            image = image.resize((img_menu_width, img_menu_height))
-            img = ImageTk.PhotoImage(image) # Conversion pour tkinter
-            self.img_menu[cle_img] = img
-
-        print("\n")
-        print(self.img_menu)
+        self.img_menu = load_img(partial_path, 256, 256)
 
         # Boutons du menu principal
         btn_solo_mode = tk.Button(
             self, 
             text="Mode Solo",
             command=self.show_solo_mode_menu,
-            image = self.img_menu["toque_universitaire"]# ,
-            # height=5,
-            # width=50
+            image = self.img_menu["toque_universitaire.png"]
         )
         btn_versus_mode = tk.Button(
             self,
             text="Mode Versus",
             command=self.show_versus_mode_menu,
-            image = self.img_menu["epees_croisees"]
+            image = self.img_menu["epees_croisees.png"]
         )
 
         # Placement des boutons sur la dernière ligne (ligne 2)
@@ -127,17 +65,86 @@ class ChessApp(tk.Tk):
         btn_versus_mode.grid(row=2, column=1, padx=10, pady=5)
 
     def show_solo_mode_menu(self):
+        # Effacer l'écran actuel et couleur background main menu
+        self.clear_screen()
+        self.configure(bg = "dark slate gray")
+
+        # Gestion de la grille du menu
+        # Configuration des lignes
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(2, weight=1)
+
+        # Configuration des colonnes
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+
+        # Boutons du menu principal
+        btn_jeu_libre = tk.Button(
+            self, 
+            text="Jeu Libre",
+            command=self.launch_free_game_mode,
+            width=15,
+            height=5
+        )
+        btn_sandbox = tk.Button(
+            self,
+            text="Sandbox",
+            command=self.launch_sandbox_mode,
+            width=15,
+            height=5
+        )
+        btn_analysis = tk.Button(
+            self,
+            text="Analyse",
+            command=self.launch_analysis_mode,
+            width=15,
+            height=5
+        )
+        btn_masterclass = tk.Button(
+            self,
+            text="Masterclass",
+            command=self.launch_masterclass_mode,
+            width=15,
+            height=5
+        )
+        btn_return_to_main = tk.Button(
+            self,
+            text="Menu Principal",
+            command=self.show_main_menu,
+            width=15,
+            height=5
+        )
+
+        # Placement des boutons sur la dernière ligne (ligne 2)
+        btn_jeu_libre.grid(row=0, column=0, padx=10, pady=5)
+        btn_sandbox.grid(row=0, column=1, padx=10, pady=5)
+        btn_analysis.grid(row=1, column=0, padx=10, pady=5)
+        btn_masterclass.grid(row=1, column=1, padx=10, pady=5)
+        btn_return_to_main.grid(row=2, column=1, padx=10, pady=5)
+
+    # --- SOLO GAME MODES --- 
+    def launch_free_game_mode(self):
+        print("Lancement du jeu libre")
+        pass
+
+    def launch_sandbox_mode(self):
+        print("Lancement de la Sandbox")
+        pass
+
+    def launch_analysis_mode(self):
+        print("Lancement du mode Analyse")
+        pass
+
+    def launch_masterclass_mode(self):
+        print("Lancement du mode Masterclass")
         pass
 
     def show_versus_mode_menu(self):
+        print("Lancement du mode Versus")
         pass
 
-    def show_screen(self):
-        self.clear_screen()
-
-    def do_stuff(self):
-        pass
-
+    # --- NETTOYAGE ---
     def clear_screen(self):
         # Détruire tous les widgets de la fenêtre
         for widget in self.winfo_children():
